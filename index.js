@@ -64,6 +64,11 @@ app.post("/" ,
     }
 );
 
+app.delete("/" ,
+    (req,res) => {
+        console.log("This is a delete reqest")  
+    }
+);
 
 
 app.listen(3000,()=>{
