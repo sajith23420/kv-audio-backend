@@ -18,13 +18,25 @@ connection.once("open",()=>{
 
 app.get("/" ,
     (req,res) => {
-        console.log("That is a get reqest")
-        res.json(
-            {
-                message: "Good Night" +req.body.name,
-                massage: "My age is" +req.body.age 
+        let studentSchema =mongoose.Schema({
+            name : String,
+            age : Number,
+            height : Number
+        })
+
+        let Student = mongoose.model("students",studentSchema)
+
+        Student.find().then(
+            (result)=>{
+                res.json(result) 
             }
-        );
+        ).catch(
+            ()=>{
+                res.json({
+                    message: "error occured"
+                })
+            }
+        )
     }
 );
 
