@@ -1,19 +1,10 @@
 import express from "express"
-
+import { getStudents, postStudents } from "../controllers/studentController.js"
 
 let studentRouter = express.Router()
 
-studentRouter.get("/",
-    (req,res)=>{
-        res.json({
-            message:"get route in student"
-        })
-})
+studentRouter.get("/",getStudents)
 
-studentRouter.post("/",(req,res)=>{
-    res.json({
-        message:"post route im student"
-    })
-})
+studentRouter.post("/",postStudents)
 
 export default studentRouter
