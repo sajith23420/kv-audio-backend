@@ -1,5 +1,6 @@
 import express from "express"
 
+
 let studentRouter = express.Router()
 
 studentRouter.get("/",
