@@ -18,58 +18,7 @@ connection.once("open",()=>{
 })
 
 
-app.get("/" ,
-    (req,res) => {
-       
-
-        Student.find().then(
-            (result)=>{
-                res.json(result) 
-            }
-        ).catch(
-            ()=>{
-                res.json({
-                    message: "error occured"
-                })
-            }
-        )
-    }
-);
-
-app.post("/" ,
-    (req,res) => {
-        
-       
-        let newStudent = req.body
-
-        let student = new Student(newStudent )
-
-        student.save().then(
-            ()=>{
-                res.json(
-                    {
-                        massage : "Studnt saved successfully"
-                    }
-                )
-            }
-        ).catch(
-            ()=>{
-                 res.json(
-                    {
-                        message : "Student could not be saved"
-                    }
-                )
-            }
-        )
-
-    }
-);
-
-app.delete("/" ,
-    (req,res) => {
-        console.log("This is a delete reqest")  
-    }
-);
+app.use("/students",studentRouter)
 
 
 app.listen(3000,()=>{
