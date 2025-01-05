@@ -1,6 +1,7 @@
 import express from "express"
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+import Student from "./models/student.js";
 
 let app = express()
 
@@ -18,13 +19,7 @@ connection.once("open",()=>{
 
 app.get("/" ,
     (req,res) => {
-        let studentSchema =mongoose.Schema({
-            name : String,
-            age : Number,
-            height : Number
-        })
-
-        let Student = mongoose.model("students",studentSchema)
+       
 
         Student.find().then(
             (result)=>{
@@ -43,14 +38,7 @@ app.get("/" ,
 app.post("/" ,
     (req,res) => {
         
-        let studentSchema =mongoose.Schema({
-            name : String,
-            age : Number,
-            height : Number
-        })
-
-        let Student = mongoose.model("students",studentSchema)
-
+       
         let newStudent = req.body
 
         let student = new Student(newStudent )
