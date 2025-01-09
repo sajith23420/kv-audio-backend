@@ -2,9 +2,15 @@ import Student from "../models/student.js"
 
 
 export function getStudents(req,res){
-    Student.find().then(
+    Student.find().then(    
         (result)=>{
             res.json(result)
+        }
+    ).catch(
+        (error)=>{
+            res.status(500).json({
+                error:error
+            })
         }
     )
 }    
