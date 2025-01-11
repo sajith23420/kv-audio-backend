@@ -1,7 +1,7 @@
 import express from "express"
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-import studentRouter from "./routes/studentRoute.js";
+
 
 const app = express()
 
@@ -18,7 +18,6 @@ connection.once("open",()=>{
 })
 
 
-app.use("/students",studentRouter)
 
 
 app.listen(3000,()=>{
