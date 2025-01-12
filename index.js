@@ -1,6 +1,7 @@
 import express from "express"
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+import userRouter from "./routes/userRouter.js";
 
 
 const app = express()
@@ -18,7 +19,7 @@ connection.once("open",()=>{
 })
 
 
-
+app.use("/api/users",userRouter)
 
 app.listen(3000,()=>{
     console.log("Server is Running on port 3000")
