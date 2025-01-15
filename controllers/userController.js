@@ -24,11 +24,19 @@ export function loginUser(req,res){
         email : data.email
     }).then(
         (user)=>{
-            res.json({
-                user : user
-            })
-        }
-    )
+            
+            if(user == null){
+                res.status(404).json({error : "User not found"});
+            }else{
+                
 
+                const isPasswordCorrect = bcrypt.compareSync(data.password, user.password);
 
+                if (isPasswordCorrect){
+                    res.json({ message: "Login successful"});
+                } else{
+                    res.status(401).json({ error: "Login faild" });
+                }
+            }
+        })
 }
