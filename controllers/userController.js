@@ -1,5 +1,7 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
 
 export function registerUser(req,res){
 
@@ -18,7 +20,7 @@ export function registerUser(req,res){
 }
 
 export function loginUser(req,res){
-    const data = req.body;
+    const data = req.body; 
 
     User.findOne({
         email : data.email
@@ -33,7 +35,14 @@ export function loginUser(req,res){
                 const isPasswordCorrect = bcrypt.compareSync(data.password, user.password);
 
                 if (isPasswordCorrect){
-                    res.json({ message: "Login successful"});
+                    const token = jwt.sign({
+                        firstName : user.firstName,
+                        lastName : user.lastName,
+                        email : user.email,
+                        role : user.role     
+                    },"kv-secret-89!")
+                    res.json({ message: "Login successful" , token : token});
+                    
                 } else{
                     res.status(401).json({ error: "Login faild" });
                 }
