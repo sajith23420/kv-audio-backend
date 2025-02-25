@@ -24,7 +24,7 @@ app.use((req,res,next)=>{
             (err,decoded)=>{
                 
                 if(!err){
-                    req.user = decoded;
+                    req.user = decoded; 
                 }
             });
     }
