@@ -23,14 +23,14 @@ export async function addProduct(req,res){
     try{
         await newProduct.save();
         res.json({
-            message :"Product registation successfully"
+            message :"Product registration successfully"
         })  
     }catch(error){
         res.status(500).json({
-            error : "Product registation faild"
+            error : "Product registration failed"
         })
     }
-    
+     
 }
 
 export async function getProducts(req,res){
@@ -46,7 +46,7 @@ export async function getProducts(req,res){
         }
     }catch(e){
         res.status(500).json({
-            message:"Faild to get product"
+            message:"failed to get product"
         })
     }
 }
@@ -75,7 +75,7 @@ export async function updateProduct(req,res) {
 
    }catch(e){
     res.status(500).json({
-        message:"Faild to update product"
+        message:"Failed to update product"
     })
    }
 }
@@ -83,7 +83,7 @@ export async function updateProduct(req,res) {
 export async function deleteProduct(req,res) {
     try{
          if(isItAdmin(req)){
-            const key = req.params.key;
+            const key = req.params.key; 
             await Product.deleteOne({key:key})
             res.json({
                 message : "Product deleted successfully"
@@ -98,5 +98,25 @@ export async function deleteProduct(req,res) {
         res.status(500).json({
             message: "Failed to delete product"
         })
+    }
+}
+
+export async function getProduct(req,res) {
+    try{
+        
+        const key = req.params.key;
+        const product = await Product.findOne({key:key});
+        if(product == null){
+            res.status(404).json({
+                message : "Product not found"
+            })
+            return;
+        }
+        res.json(product);
+        return; 
+    }catch(e){
+        res.status(500).json({
+            message: "Failed to get product"
+        });
     }
 }

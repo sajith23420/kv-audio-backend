@@ -14,14 +14,17 @@ export function registerUser(req,res){
     const newUser =new User(data)
 
     newUser.save().then(()=>{
-        res.json({message : "User registerd successfully"})
+        res.json({message : "User register successfully"})
     }).catch((error)=>{
-        res.status(500).json({error : "User registration faild"})
+        res.status(500).json({error : "User registration failed"})
     })
 
 }
 
 export function loginUser(req,res){
+
+
+
     const data = req.body; 
 
     User.findOne({

@@ -19,7 +19,7 @@ export function addReview(req,res){
     newReview.save().then(() => {
         res.json({ message:"Review added successfully"});
     }).catch((error) => {
-        res.status(500).json({ error : "Review addition faild"});
+        res.status(500).json({ error : "Review addition failed"});
     })  
 }
 
@@ -57,7 +57,7 @@ export function deleteReview
         res.json({message:"Review deleted successfully"});
     }).catch(()=>{
         res.status(500).json
-        ({error:"Review deletion faild"});
+        ({error:"Review deletion failed"});
     }); 
 
     return
@@ -97,9 +97,9 @@ export function approveReview(req,res){
         ).then(() =>{
             res.json({message:"Review approved successfully"});
         }).catch(() =>{
-            res.status(500).json({error:"Review approval faild"});
+            res.status(500).json({error:"Review approval failed"});
         });
     }else{
         res.status(403).json({message:"You are not an admin.Only admins can approve the reviews"});
     }
-}
+} 
