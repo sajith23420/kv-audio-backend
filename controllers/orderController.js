@@ -14,7 +14,7 @@ export async function createOrder(req, res) {
 
     orderInfo.email = req.user.email;
 
-   
+
     try {
         const lastOrder = await Order.find().sort({ orderID: -1 }).limit(1);
         if (lastOrder.length === 0) {
@@ -30,7 +30,7 @@ export async function createOrder(req, res) {
         return;
     }
 
-    
+
     if (!data.startingDate) {
         res.status(400).json({ message: "startingDate is required" });
         return;
@@ -95,3 +95,68 @@ export async function createOrder(req, res) {
         res.status(500).json({ message: "Failed to create order" });
     }
 }
+
+export async function getQuote(req, res) {
+    console.log(req.body);
+    const data = req.body;
+    const orderInfo = {
+        orderItems: []  
+    };
+
+    let oneDayCost = 0;
+
+    for (let i = 0; i < data.orderedItems.length; i++) {
+        try {
+            const item = data.orderedItems[i];
+            const product = await Product.findOne({ key: item.key });
+
+            if (!product) {
+                res.status(404).json({
+                    message: `Product with key ${item.key} not found`
+                });
+                return;
+            }
+
+            if (!product.availability) {
+                res.status(400).json({
+                    message: `Product with key ${item.key} is not available`
+                });
+                return;
+            }
+
+            orderInfo.orderItems.push({
+                product: {
+                    key: product.key,
+                    name: product.name,
+                    Image: product.Image[0],
+                    price: product.price
+                },
+                quantity: item.qty
+            });
+
+            oneDayCost += product.price * item.qty;
+
+        } catch (err) {
+            res.status(500).json({
+                message: "Error processing product: " + data.orderedItems[i].key
+            });
+            return;
+        }
+     }
+
+    orderInfo.startingDate = data.startingDate;
+    orderInfo.endingDate = data.endingDate;
+    orderInfo.days = data.days;
+    orderInfo.totalAmount = oneDayCost * data.days;
+
+    try {
+        
+        res.status(201).json({
+            message: "Order quotation",
+            total:  orderInfo.totalAmount,
+        });
+    } catch (err) {
+        console.log(err); 
+        res.status(500).json({ message: "Failed to create order" });
+    }
+} 
