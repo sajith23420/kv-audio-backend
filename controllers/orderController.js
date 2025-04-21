@@ -1,5 +1,6 @@
 import Order from "../models/order.js";
 import Product from "../models/product.js";
+import { isItAdmin, isItCustomer } from "./userController.js";
 
 export async function createOrder(req, res) {
     const data = req.body;
@@ -100,7 +101,7 @@ export async function getQuote(req, res) {
     console.log(req.body);
     const data = req.body;
     const orderInfo = {
-        orderItems: []  
+        orderItems: []
     };
 
     let oneDayCost = 0;
@@ -142,7 +143,7 @@ export async function getQuote(req, res) {
             });
             return;
         }
-     }
+    }
 
     orderInfo.startingDate = data.startingDate;
     orderInfo.endingDate = data.endingDate;
@@ -150,13 +151,67 @@ export async function getQuote(req, res) {
     orderInfo.totalAmount = oneDayCost * data.days;
 
     try {
-        
+
         res.status(201).json({
             message: "Order quotation",
-            total:  orderInfo.totalAmount,
+            total: orderInfo.totalAmount,
         });
     } catch (err) {
-        console.log(err); 
+        console.log(err);
         res.status(500).json({ message: "Failed to create order" });
     }
-} 
+}
+
+export async function getOrders(req, res) {
+    if (isItCustomer(req)) {
+        try {
+            const orders = await Order.find({ email: req.user.email });
+            res.json(orders);
+        } catch (e) {
+            res.status(500).json({ error: "Failed to get orders" });
+
+        }
+    } else if (isItAdmin(req)) {
+        try {
+            const orders = await Order.find();
+            res.json(orders);
+        } catch (e) {
+            res.status(500).json({ error: "Failed to get orders" })
+        }
+    } else {
+        res.status(403).json({ error: "Unauthorized" })
+
+    }
+}
+
+export async function approveOrRejectOrder(req, res) {
+    const orderID = req.params.orderID;
+    const status = req.body.status; // "approved" or "rejected"
+
+    if (isItAdmin(req)) {
+        try {
+            const order = await Order.findOne(
+                { orderID: orderID }
+            )
+            if (order == null) {
+                res.status(404).json({ error: "Order not found" });
+                return;
+
+            }
+            await Order.updateOne(
+                { orderID: orderID },
+                { status: status }
+            );   
+
+
+        } catch (e) {
+            res.status(500).json({ error: "Failed to get order" });
+        }
+
+    }
+    else {
+        res.status(403).json({ error: "Unauthorized" });
+        return;
+    }
+
+}
