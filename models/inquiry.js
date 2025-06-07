@@ -7,15 +7,19 @@ const inquirySchema = new mongoose.Schema({
         required : true,
         unique : true
     },
+    name : {
+        type : String,
+        required : true,
+    },
     email : {
         type : String,
         required : true,
     },
-    message : {
+    address : {
         type : String,
-        required : true
+        required : true,
     },
-    phone : {
+    message : {
         type : String,
         required : true
     },
@@ -39,4 +43,4 @@ const inquirySchema = new mongoose.Schema({
 const Inquiry = mongoose.model("Inquiries",
     inquirySchema);
 
-export default Inquiry; 
+export default Inquiry;
